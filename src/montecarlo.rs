@@ -21,7 +21,6 @@ impl State
         let mut init_coords = Vec::<(f64, f64)>::new();
         for i in 0..n{
             init_coords.push(coord);
-
         }
 
         State {
@@ -39,7 +38,7 @@ impl State
 
     pub fn hard_sphere_energy_seed(&self) -> f64
     {
-        let mut this_energy: f64 = 0.0;
+        let mut this_energy: f64;
         let mut tot_energy: f64 = 0.0;
 
         for i in 0..self.n
@@ -50,11 +49,11 @@ impl State
             {
                 let coord_two: (f64,f64) = self.coords[j as usize];
 
-                if(coord_one != coord_two && j > i)
+                if coord_one != coord_two && j > i
                 {
                     let d = util::calc_dis(coord_two, coord_one);
 
-                    if(d >= self.settings.sigma)
+                    if d >= self.settings.sigma
                     {
                         this_energy = 0.0;
                     }
@@ -82,19 +81,19 @@ impl State
             {
                 let coord_two: (f64,f64) = self.coords[j as usize];
 
-                if(coord_one != coord_two && j > i)
+                if coord_one != coord_two && j > i
                 {
                     let d = util::calc_dis(coord_two, coord_one);
 
-                    if(d < self.settings.sigma)
+                    if d < self.settings.sigma
                     {
                         this_energy = std::f64::INFINITY;
                     }
-                    else if (d >= self.settings.sigma && d <= self.settings.r * self.settings.sigma)
+                    else if d >= self.settings.sigma && d <= self.settings.r * self.settings.sigma
                     {
                         this_energy = -1 as f64 * self.settings.epsilon;
                     }
-                    else if (d > self.settings.r * self.settings.sigma)
+                    else if d > self.settings.r * self.settings.sigma
                     {
                         this_energy = 0.0;
                     }
@@ -107,7 +106,7 @@ impl State
 
     pub fn lennard_jones_energy_seed(&self) -> f64
     {
-        let mut this_energy: f64 = 0.0;
+        let mut this_energy: f64;
         let mut tot_energy: f64 = 0.0;
 
         for i in 0..self.n
@@ -118,10 +117,10 @@ impl State
             {
                 let coord_two: (f64,f64) = self.coords[j as usize];
 
-                if(coord_one != coord_two && j > i)
+                if coord_one != coord_two && j > i
                 {
                     let d = util::calc_dis(coord_two, coord_one);
-                    this_energy = 4.0 * self.settings.epsilon * f64::powf(self.settings.sigma / self.settings.r as f64, 12.0) - f64::powf(self.settings.sigma / self.settings.r, 6.0);
+                    this_energy = 4.0 * self.settings.epsilon * f64::powf(self.settings.sigma / d , 12.0) - f64::powf(self.settings.sigma / d, 6.0);
                     tot_energy += this_energy
                 }
             }
@@ -131,18 +130,18 @@ impl State
 
     pub fn hard_sphere_energy(&self, coord: (f64, f64)) -> f64
     {
-        let mut this_energy: f64 = 0.0;
+        let mut this_energy: f64;
         let mut tot_energy: f64 = 0.0;
 
         for i in 0..self.n
         {
             let coord_one: (f64,f64) = self.coords[i as usize];
 
-            if(coord_one != coord)
+            if coord_one != coord
             {
                 let d = util::calc_dis(coord, coord_one);
 
-                if(d >= self.settings.sigma)
+                if d >= self.settings.sigma
                 {
                     this_energy = 0.0;
                 }
@@ -166,19 +165,19 @@ impl State
         {
             let coord_one: (f64,f64) = self.coords[i as usize];
 
-            if(coord_one != coord)
+            if coord_one != coord
             {
                 let d = util::calc_dis(coord, coord_one);
 
-                if(d < self.settings.sigma)
+                if d < self.settings.sigma
                 {
                     this_energy = std::f64::INFINITY;
                 }
-                else if (d >= self.settings.sigma && d <= self.settings.r * self.settings.sigma)
+                else if d >= self.settings.sigma && d <= self.settings.r * self.settings.sigma
                 {
                     this_energy = -1 as f64 * self.settings.epsilon;
                 }
-                else if (d > self.settings.r * self.settings.sigma)
+                else if d > self.settings.r * self.settings.sigma
                 {
                     this_energy = 0.0;
                 }
@@ -191,17 +190,17 @@ impl State
 
     pub fn lennard_jones_energy(&self, coord: (f64, f64)) -> f64
     {
-        let mut this_energy: f64 = 0.0;
+        let mut this_energy: f64;
         let mut tot_energy: f64 = 0.0;
 
         for i in 0..self.n
         {
             let coord_one: (f64,f64) = self.coords[i as usize];
 
-            if(coord_one != coord)
+            if coord_one != coord
             {
                 let d = util::calc_dis(coord, coord_one);
-                this_energy = 4.0 * self.settings.epsilon * f64::powf(self.settings.sigma / self.settings.r as f64, 12.0) - f64::powf(self.settings.sigma / self.settings.r, 6.0);
+                this_energy = 4.0 * self.settings.epsilon * f64::powf(self.settings.sigma / d, 12.0) - f64::powf(self.settings.sigma / d, 6.0);
                 tot_energy += this_energy
             }
         }

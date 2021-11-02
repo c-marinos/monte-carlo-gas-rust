@@ -1,5 +1,3 @@
-use std::num;
-
 pub struct Point2 {
     pub x: f32,
     pub y: f32,
@@ -28,7 +26,7 @@ pub fn avg_dis(coords: Vec<(f64,f64)>) -> f64
     {
         for j in 0..n
         {
-            if(i != j && j > i)
+            if i != j && j > i
             {
                 avg_d += calc_dis(coords[i], coords[j]);
             }
