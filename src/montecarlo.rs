@@ -4,6 +4,7 @@ pub mod settings;
 pub mod util;
 
 static KB:f64 = 0.0019872036;
+pub const E: f64 = 2.71828182845904523536028747135266250f64;
 
 pub struct State {
     pub n: i32,
@@ -219,6 +220,7 @@ impl State
         }
 
         let  kbt:f64 = KB * temp as f64;
-        kbt
+
+        f64::powf(E, -1 as f64 * dE / kbt)
     }
 }
