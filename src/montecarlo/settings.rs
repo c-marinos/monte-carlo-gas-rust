@@ -4,13 +4,14 @@ pub struct Settings
 {
     pub potential_function: PotentialFunction,
     pub temp: Temperature,
-    pub r: i32,
+    pub r: f64,
     pub sigma: f64,
+    pub epsilon: f64,
 }
 
 impl Settings
 {
-    pub fn new(potential_function: PotentialFunction, temp: Temperature, r:i32, sigma:f64) -> Settings
+    pub fn new(potential_function: PotentialFunction, temp: Temperature, r:f64, sigma:f64, epsilon: f64) -> Settings
     {
 
         Settings
@@ -19,6 +20,7 @@ impl Settings
             temp: temp,
             r: r,
             sigma: sigma,
+            epsilon: epsilon,
         }
     }
 }

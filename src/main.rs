@@ -15,8 +15,8 @@ use piston::window::WindowSettings;
 const N:i32 = 150;
 static KB:f32 = 0.0019872036;
 static T:i32 = 300; // 100 to 500
-static EPSILON:i32 = 5; // 0 to 10
-static R:i32 = 5; // 0 to 10
+static EPSILON:f64 = 1.0; // 0 to 10
+static R:f64 = 5.0; // 0 to 10
 static SIGMA:f64 = 0.15; // 0 to 1
 static STEPSIZE:f32 = 0.5; // 0 to 1
 static WAITTIME:f32 = 0.00000000001;
@@ -70,7 +70,8 @@ fn main() {
         montecarlo::settings::PotentialFunction::HardSphere,
         montecarlo::settings::Temperature::ThreeHundred,
         R,
-        SIGMA);
+        SIGMA,
+        EPSILON);
 
     let default_state = montecarlo::State::new(N,settings,L);
 

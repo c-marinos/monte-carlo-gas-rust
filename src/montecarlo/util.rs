@@ -19,12 +19,21 @@ pub fn calc_dis(first_point:(f64,f64), second_point:(f64,f64)) -> f64
     (xds + yds).sqrt()
 }
 
-pub fn avg_dis()
+pub fn avg_dis(coords: Vec<(f64,f64)>) -> f64
 {
+    let mut avg_d:f64 = 0.0;
+    let n = coords.len();
 
-}
+    for i in 0..n
+    {
+        for j in 0..n
+        {
+            if(i != j && j > i)
+            {
+                avg_d += calc_dis(coords[i], coords[j]);
+            }
+        }
+    }
 
-pub fn p()
-{
-
+    avg_d / (n as f64 * (n as f64 - 1.0) / 2.0)
 }
