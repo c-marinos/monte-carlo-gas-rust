@@ -2,11 +2,10 @@
 name = "monte-carlo-gas"
 version = "0.1.0"
 edition = "2018"
-authors = ["Cyril Marinos <marinoscyril@gmail.com"]
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["Victoria Perrone"]
 
 [dependencies]
+rand = "0.7.0"
 piston = "0.53.0"
 piston2d-graphics = "0.40.0"
 pistoncore-glutin_window = "0.69.0"
