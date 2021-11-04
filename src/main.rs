@@ -18,9 +18,9 @@ static T:i32 = 300; // 100 to 500
 static EPSILON:f64 = 1.0; // 0 to 10
 static R:f64 = 5.0; // 0 to 10
 static SIGMA:f64 = 0.15; // 0 to 1
-static STEPSIZE:f32 = 0.5; // 0 to 1
+static STEPSIZE:f64 = 0.5; // 0 to 1
 static WAITTIME:f32 = 0.00000000001;
-static L:f32 = 3.0; // 0 to 5
+static L:f64 = 3.0; // 0 to 5
 const WHITE: [f32; 4] = [0.97, 0.97, 0.97, 1.0];
 const RED: [f32; 4] = [0.95, 0.05, 0.05, 1.0];
 const WINDOWSIZE: Size = Size{width:800.0,height:800.0};
@@ -71,7 +71,8 @@ fn main() {
         montecarlo::settings::Temperature::ThreeHundred,
         R,
         SIGMA,
-        EPSILON);
+        EPSILON,
+        STEPSIZE);
 
     let default_state = montecarlo::State::new(N,settings,L);
 

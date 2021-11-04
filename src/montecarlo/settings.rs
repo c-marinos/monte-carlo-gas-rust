@@ -7,11 +7,12 @@ pub struct Settings
     pub r: f64,
     pub sigma: f64,
     pub epsilon: f64,
+    pub step_size: f64,
 }
 
 impl Settings
 {
-    pub fn new(potential_function: PotentialFunction, temp: Temperature, r:f64, sigma:f64, epsilon: f64) -> Settings
+    pub fn new(potential_function: PotentialFunction, temp: Temperature, r:f64, sigma:f64, epsilon: f64, step_size: f64) -> Settings
     {
 
         Settings
@@ -21,6 +22,7 @@ impl Settings
             r: r,
             sigma: sigma,
             epsilon: epsilon,
+            step_size: step_size,
         }
     }
 }
