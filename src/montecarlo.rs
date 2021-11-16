@@ -25,12 +25,12 @@ pub struct Energies
     pub lj_energy: f64,
     pub old_try_lj_energy: f64,
     pub try_lj_energy: f64,
-    pub hs_dE: f64,
-    pub sw_dE: f64,
-    pub lj_dE: f64,
-    pub hs_dE_list: Vec<f64>,
-    pub sw_dE_list: Vec<f64>,
-    pub lj_dE_list: Vec<f64>,
+    pub hs_de: f64,
+    pub sw_de: f64,
+    pub lj_de: f64,
+    pub hs_de_list: Vec<f64>,
+    pub sw_de_list: Vec<f64>,
+    pub lj_de_list: Vec<f64>,
 }
 
 impl Energies
@@ -47,12 +47,12 @@ impl Energies
             lj_energy: 0.0,
             old_try_lj_energy: 0.0,
             try_lj_energy: 0.0,
-            hs_dE: 0.0,
-            sw_dE: 0.0,
-            lj_dE: 0.0,
-            hs_dE_list: Vec::<f64>::new(),
-            sw_dE_list: Vec::<f64>::new(),
-            lj_dE_list: Vec::<f64>::new(),
+            hs_de: 0.0,
+            sw_de: 0.0,
+            lj_de: 0.0,
+            hs_de_list: Vec::<f64>::new(),
+            sw_de_list: Vec::<f64>::new(),
+            lj_de_list: Vec::<f64>::new(),
         }
     }
 }
@@ -76,7 +76,7 @@ impl State
         }
     }
 
-    pub fn evolve(&self)
+    pub fn evolve(&mut self)
     {
         let mut this_try = Vec::<(f64, f64)>::new();
         let mut old_try = Vec::<(f64, f64)>::new();
@@ -123,6 +123,21 @@ impl State
             this_try.push(d);
         }
 
+        let validmove: bool = true;
+        let alpha: f64 = rand::thread_rng().gen_range(0.0, 1.0);
+
+        if self.settings.potential_function == settings::PotentialFunction::HardSphere
+        {
+
+        }
+        else if self.settings.potential_function == settings::PotentialFunction::SquareWell
+        {
+
+        }
+        else if self.settings.potential_function == settings::PotentialFunction::LennardJones
+        {
+
+        }
         /*
 
 		// we start with this bool set to true. if our energy goes up and our P() < alpha then this will be changed to false
@@ -295,14 +310,14 @@ impl State
         tot_energy
     }
 
-    pub fn hard_sphere_energy(&self, coord: (f64, f64)) -> f64
+    pub fn hard_sphere_energy(&self, coord_list: Vec<(f64, f64)>, coord: (f64, f64)) -> f64
     {
         let mut this_energy: f64;
         let mut tot_energy: f64 = 0.0;
 
-        for i in 0..self.n
+        for coord_one in coord_list
         {
-            let coord_one: (f64,f64) = self.coords[i as usize];
+            //let coord_one: (f64,f64) = self.coords[i as usize];
 
             if coord_one != coord
             {
@@ -375,7 +390,7 @@ impl State
         tot_energy
     }
 
-    pub fn probability(dE: f64, temperature: settings::Temperature) -> f64
+    pub fn probability(de: f64, temperature: settings::Temperature) -> f64
     {
         let mut temp:i32 = 0;
         match temperature {
@@ -387,6 +402,6 @@ impl State
 
         let  kbt:f64 = KB * temp as f64;
 
-        f64::powf(E, -1 as f64 * dE / kbt)
+        f64::powf(E, -1 as f64 * de / kbt)
     }
 }

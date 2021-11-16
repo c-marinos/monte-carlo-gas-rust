@@ -74,8 +74,9 @@ fn main() {
         EPSILON,
         STEPSIZE);
 
-    let default_state = montecarlo::State::new(N,settings,L);
+    let mut default_state = montecarlo::State::new(N,settings,L);
 
+    default_state.evolve();
 
     // Change this to OpenGL::V2_1 if not working.
     let opengl = OpenGL::V3_2;
