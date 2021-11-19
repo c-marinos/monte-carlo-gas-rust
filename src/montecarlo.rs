@@ -128,7 +128,13 @@ impl State
 
         if self.settings.potential_function == settings::PotentialFunction::HardSphere
         {
+            self.energies.old_try_hs_energy = self.hard_sphere_energy(old_try, old_energy);
+            self.energies.try_hs_energy = self.hard_sphere_energy(this_try, changed_atom);
 
+            if self.energies.hs_energy - self.energies.old_try_hs_energy + self.energies.try_hs_energy <= self.energies.try_hs_energy
+            {
+
+            }
         }
         else if self.settings.potential_function == settings::PotentialFunction::SquareWell
         {
