@@ -25,12 +25,12 @@ pub struct Energies
     pub lj_energy: f64,
     pub old_try_lj_energy: f64,
     pub try_lj_energy: f64,
-    pub hs_dE: f64,
-    pub sw_dE: f64,
-    pub lj_dE: f64,
-    pub hs_dE_list: Vec<f64>,
-    pub sw_dE_list: Vec<f64>,
-    pub lj_dE_list: Vec<f64>,
+    pub hs_de: f64,
+    pub sw_de: f64,
+    pub lj_de: f64,
+    pub hs_de_list: Vec<f64>,
+    pub sw_de_list: Vec<f64>,
+    pub lj_de_list: Vec<f64>,
 }
 
 impl Energies
@@ -47,12 +47,12 @@ impl Energies
             lj_energy: 0.0,
             old_try_lj_energy: 0.0,
             try_lj_energy: 0.0,
-            hs_dE: 0.0,
-            sw_dE: 0.0,
-            lj_dE: 0.0,
-            hs_dE_list: Vec::<f64>::new(),
-            sw_dE_list: Vec::<f64>::new(),
-            lj_dE_list: Vec::<f64>::new(),
+            hs_de: 0.0,
+            sw_de: 0.0,
+            lj_de: 0.0,
+            hs_de_list: Vec::<f64>::new(),
+            sw_de_list: Vec::<f64>::new(),
+            lj_de_list: Vec::<f64>::new(),
         }
     }
 }
@@ -124,38 +124,27 @@ impl State
         }
 
 		// We start with this bool set to true. If our energy goes up and our P(dE) < alpha then this will be changed to false
-        let mut validmove: bool = true;
-        let alpha:f64 = rand::thread_rng().gen_range(0.0, 1.0);
+        let validmove: bool = true;
+        let alpha: f64 = rand::thread_rng().gen_range(0.0, 1.0);
 
-        if matches!(self.settings.potential_function, settings::PotentialFunction::HardSphere)
+        if self.settings.potential_function == settings::PotentialFunction::HardSphere
         {
-            self.energies.old_try_hs_energy = self.hard_sphere_energy(old_try, old_atom);
+            self.energies.old_try_hs_energy = self.hard_sphere_energy(old_try, old_energy);
             self.energies.try_hs_energy = self.hard_sphere_energy(this_try, changed_atom);
 
-            if -self.energies.old_try_hs_energy + self.energies.try_hs_energy <= 0.0
+            if self.energies.hs_energy - self.energies.old_try_hs_energy + self.energies.try_hs_energy <= self.energies.try_hs_energy
             {
-                self.energies.hs_energy += -self.energies.old_try_hs_energy + self.energies.try_hs_energy;
-                self.energies.hs_dE_list.push(self.energies.hs_energy);
-                //self.process_accepted_move();
-            }
-            else
-            {
-                self.energies.hs_dE = -self.energies.old_try_hs_energy + self.energies.try_hs_energy;
-                if State::probability(self, self.energies.hs_dE) < alpha
-                {
-                    validmove = false;
-                }
+
             }
         }
-        else if matches!(self.settings.potential_function, settings::PotentialFunction::SquareWell)
+        else if self.settings.potential_function == settings::PotentialFunction::SquareWell
         {
 
         }
-        else if matches!(self.settings.potential_function, settings::PotentialFunction::LennardJones)
+        else if self.settings.potential_function == settings::PotentialFunction::LennardJones
         {
 
         }
-
         /*
 
 		// we start with this bool set to true. if our energy goes up and our P() < alpha then this will be changed to false
@@ -351,7 +340,7 @@ impl State
 
         for i in 0..coords.len()
         {
-            let coord_one: (f64,f64) = self.coords[i as usize];
+            //let coord_one: (f64,f64) = self.coords[i as usize];
 
             if coord_one != coord
             {
@@ -436,6 +425,6 @@ impl State
 
         let  kbt:f64 = KB * temp as f64;
 
-        f64::powf(E, -1 as f64 * dE / kbt)
+        f64::powf(E, -1 as f64 * de / kbt)
     }
 }

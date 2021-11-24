@@ -34,6 +34,7 @@ pub enum Temperature
     FiveHundred
 }
 
+#[derive(PartialEq)]
 pub enum PotentialFunction
 {
     HardSphere,
