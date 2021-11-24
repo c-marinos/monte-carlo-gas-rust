@@ -39,7 +39,7 @@ impl App {
             // Clear the screen.
             // use this for a reset button later
             clear(WHITE, g);
-});
+        });
 
         for i in 0..N {
 
@@ -60,8 +60,8 @@ impl App {
     }
 
     fn update(&mut self, args: &UpdateArgs) {
-        self.x += 2.0 * args.dt;
-        self.y += 2.0 * args.dt;
+        //self.x += args.dt;
+        //self.y += args.dt;
     }
 }
 

@@ -76,7 +76,7 @@ impl State
         }
     }
 
-    pub fn evolve(&self)
+    pub fn evolve(&mut self)
     {
         let mut this_try = Vec::<(f64, f64)>::new();
         let mut old_try = Vec::<(f64, f64)>::new();
@@ -84,7 +84,7 @@ impl State
         let e: (f64, f64) = self.coords[randno as usize];
 
         let mut changed_atom: (f64, f64) = (0.0, 0.0);
-        let mut old_energy: (f64, f64) = (0.0, 0.0);
+        let mut old_atom: (f64, f64) = (0.0, 0.0);
 
         for i in 0..self.n
         {
@@ -96,8 +96,9 @@ impl State
                 let x = e.0;
                 let y = e.1;
 
-                old_energy = (x, y);
+                old_atom = (x, y);
 
+                // move by a random amount less than |step_size|
                 let xr = rand::thread_rng().gen_range(-1.0 * self.settings.step_size, self.settings.step_size);
                 let yr = rand::thread_rng().gen_range(-1.0 * self.settings.step_size, self.settings.step_size);
 
@@ -117,10 +118,42 @@ impl State
 
                 d = (new_x, new_y);
                 changed_atom = (new_x, new_y);
-
             }
 
             this_try.push(d);
+        }
+
+		// We start with this bool set to true. If our energy goes up and our P(dE) < alpha then this will be changed to false
+        let mut validmove: bool = true;
+        let alpha:f64 = rand::thread_rng().gen_range(0.0, 1.0);
+
+        if matches!(self.settings.potential_function, settings::PotentialFunction::HardSphere)
+        {
+            self.energies.old_try_hs_energy = self.hard_sphere_energy(old_try, old_atom);
+            self.energies.try_hs_energy = self.hard_sphere_energy(this_try, changed_atom);
+
+            if -self.energies.old_try_hs_energy + self.energies.try_hs_energy <= 0.0
+            {
+                self.energies.hs_energy += -self.energies.old_try_hs_energy + self.energies.try_hs_energy;
+                self.energies.hs_dE_list.push(self.energies.hs_energy);
+                //self.process_accepted_move();
+            }
+            else
+            {
+                self.energies.hs_dE = -self.energies.old_try_hs_energy + self.energies.try_hs_energy;
+                if State::probability(self, self.energies.hs_dE) < alpha
+                {
+                    validmove = false;
+                }
+            }
+        }
+        else if matches!(self.settings.potential_function, settings::PotentialFunction::SquareWell)
+        {
+
+        }
+        else if matches!(self.settings.potential_function, settings::PotentialFunction::LennardJones)
+        {
+
         }
 
         /*
@@ -201,6 +234,22 @@ impl State
 
 		Grapher.Log(value, "Percent accepted");
         */
+    }
+
+    pub fn process_accepted_move(&mut self)
+    {
+        if matches!(self.settings.potential_function, settings::PotentialFunction::HardSphere)
+        {
+
+        }
+        else if matches!(self.settings.potential_function, settings::PotentialFunction::SquareWell)
+        {
+
+        }
+        else if matches!(self.settings.potential_function, settings::PotentialFunction::LennardJones)
+        {
+
+        }
     }
 
     pub fn hard_sphere_energy_seed(&self) -> f64
@@ -295,12 +344,12 @@ impl State
         tot_energy
     }
 
-    pub fn hard_sphere_energy(&self, coord: (f64, f64)) -> f64
+    pub fn hard_sphere_energy(&self, coords: Vec<(f64,f64)>, coord: (f64, f64)) -> f64
     {
         let mut this_energy: f64;
         let mut tot_energy: f64 = 0.0;
 
-        for i in 0..self.n
+        for i in 0..coords.len()
         {
             let coord_one: (f64,f64) = self.coords[i as usize];
 
@@ -375,10 +424,10 @@ impl State
         tot_energy
     }
 
-    pub fn probability(dE: f64, temperature: settings::Temperature) -> f64
+    pub fn probability(&self, dE: f64) -> f64
     {
         let mut temp:i32 = 0;
-        match temperature {
+        match self.settings.temp {
             settings::Temperature::OneHundred => temp = 100,
             settings::Temperature::ThreeHundred => temp = 300,
             settings::Temperature::FiveHundred => temp = 500,
